@@ -3,3 +3,4 @@ venv/
 *.swp
 outputs/*
 !outputs/*.txt
+__*

@@ -25,7 +25,26 @@ $ pacman -S tk
 
 > For other operating systems, look up the packages and install through your OS's package manager.
 
-
 ## Development...
 
 > This project is currently under active development. Details will ensue as the project develops.
+
+## Developers
+
+This section is a reference for developers
+
+### Adding packages
+
+If you need to add a package, ensure you are working in the virtual environment. Then install using pip:
+``` bash
+$ pip install <package-name>
+```
+
+Then update the requirements file. First change directory to GraPhT/ Then
+``` bash
+$ pip freeze > requirements.txt
+```
+
+### Clean commits
+
+Any files generated in /output or /venv are automatically removed from your git commits. Please ensure your commits only add files that are required by the project. To check which files are being commited, remember you can check with ` git status`.
