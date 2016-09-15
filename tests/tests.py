@@ -43,7 +43,7 @@ def run_test(configData):
     field_1, field_2 = sympy.symbols('f1,f2')
     fields = (field_1, field_2)
     # Define the potential
-    potential_form = const_2 * field_1 ** 2 + const_3 * field_1 ** 3 + const_4 * field_1 ** 4  # + x2**4
+    potential_form = const_2 * field_1 ** 2 + const_3 * field_1 ** 3 + const_4 * field_1 ** 4   + field_2**4
     # Vevs and masses
     vevs = (246., 0.)
     masses = (0., 125.)  # some ordering may be required to match diagonalisation
@@ -58,30 +58,42 @@ def run_test(configData):
     potential_parameters['vevs'] = vevs
     potential_parameters['masses'] = masses
     potential_parameters['unknown_constants'] = (const_2, const_4)
+    potential_parameters['known_constants'] = (const_3,)
+    potential_parameters['known_constants_vals'] = (-1.5 * 125. ** 2 / 246. / 3,)
 
     # Create our potential class
     # This stores all info about the potential - See the class
     potential = Potential(potential_parameters)
     # potential currently cannot handle pure mass terms
 
+
+
     # solve the constants from 1st derivative and hessian of potential
     # This will be private function - But for testing lets run it
-    print("=======printing solutions to solving constants========")
-    print(potential._constant_dependence)
+    # TODO: Make sure there are no more free constants after reduction
+    print("==============coupling constants reduction============")
+    print(potential._constant_reduction)
     print("======================================================")
 
     # ####working out the free-parameters######
-    print("Remaining Variables :", potential.remaining_vars())
 
-    # Only printing for testing. Private member
-    print("Constrained Potential :", potential._constrained_potential)
-    # Set some constants
-    constant_val = {'c3': -1.5 * 125. ** 2 / 246. / 3}
-    print("Potential with c3 Fixed :", potential.set_constants(constant_val))
+    print("===============printing free constants================")
+    print(potential.remaining_vars())
+    print("======================================================")
 
-    # Get Numeric Values of Constants given fixed unknown variables
-    print("Numeric Values for Constants with c3 fixed :", potential.numeric_const_values(constant_val))
 
+
+    # print("=====================test outputs=====================")
+    # # Only printing for testing. Private member
+    # print("Constrained Potential :", potential._constrained_potential)
+    #
+    # # Set some constants
+    # constant_val = {'c3': -1.5 * 125. ** 2 / 246. / 3}
+    # print("Potential with c3 Fixed :", potential.set_constants(constant_val))
+    #
+    # # Get Numeric Values of Constants given fixed unknown variables
+    # print("Numeric Values for Constants with c3 fixed :", potential.numeric_const_values(constant_val))
+    # print("======================================================")
 
     # define the bounds of the minimisation, where the c20vals etc are set to fix the value
     # define initial point for minimisation
@@ -93,12 +105,16 @@ def run_test(configData):
     # TODO: Bounds can be class members and set up from config. Or dervived in the constructor
     # bnds = ((-400., 400.), (-400., 400.), (c20val, c20val), (c30val, c30val), (c40val, c40val))
     # bounds = < insert some points >
+    #bounds=((-400.,400),)
 
-    #initial_minimization_point = numpy.array([200., 200., c20val, c30val, c40val])
-    # run minimisation #does not really
-    (bounds, initial_point) = (0,0)
+    # run minimisation
+    # TODO: for each field add the range (-400.,400.)
+    (bounds, initial_point) = (((-400.,400),(-400.,400.)),[0.,0.])
+
     print("=========printing solutions from minimisation=========")
+    #print(potential.func_to_minimise())
     print(potential.minimise(bounds, initial_point))
+    #print(Potential.out)
     print("======================================================")
 
     # Plotting

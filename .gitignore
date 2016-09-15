@@ -1,6 +1,8 @@
 venv/
 .idea/
 *.swp
+*.pyc
+*/*.pyc
 outputs/*
 !outputs/*.txt
 __*
